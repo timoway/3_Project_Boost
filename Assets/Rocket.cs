@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Rocket : MonoBehaviour
 {
+    [SerializeField]float rcsThrust = 100f;
+    [SerializeField] float mainThrust = 100f;
+
     Rigidbody rigidBody;
     AudioSource audioSource; //Variable type
 
@@ -26,7 +29,7 @@ public class Rocket : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space)) //can thrust while rotating - separate if
         {
-            rigidBody.AddRelativeForce(Vector3.up);
+            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
             if (!audioSource.isPlaying) //so it doesn't layer audio file on top of itself
             {
                 audioSource.Play();
@@ -42,13 +45,14 @@ public class Rocket : MonoBehaviour
     {
         rigidBody.freezeRotation = true; //take manual control of rotation
         
+        float rotationThisFrame = rcsThrust * Time.deltaTime;
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.forward);
+            transform.Rotate(Vector3.forward * rotationThisFrame);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(-Vector3.forward);
+            transform.Rotate(-Vector3.forward * rotationThisFrame);
         }
         rigidBody.freezeRotation = false; //resume physics control of rotation
     }
